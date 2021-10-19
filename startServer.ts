@@ -15,6 +15,7 @@ import http from "http";
 import { User } from "./src/@types/express/entity/User";
 import { Message } from "./src/@types/express/entity/Message";
 import { Chat } from "./src/@types/express/entity/Chat";
+import { Book } from "./src/@types/express/entity/Book";
 
 dotenv.config();
 
@@ -62,7 +63,7 @@ const ormConfig: PostgresConnectionOptions[] = [
     password: "test",
     database: "test",
     logging: false,
-    entities: [User, Message, Chat],
+    entities: [User, Message, Chat, Book],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     synchronize: false,
@@ -83,7 +84,7 @@ const ormConfig: PostgresConnectionOptions[] = [
     synchronize: false,
     port: 5432,
     //TODO: test
-    entities: [User, Message, Chat],
+    entities: [User, Message, Chat, Book],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     cli: {

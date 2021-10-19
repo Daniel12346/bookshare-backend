@@ -3,11 +3,9 @@ import {
     Column,
     Entity,
     BaseEntity,
-    //ManyToMany,
     ManyToOne,
     JoinTable,
     ManyToMany
-    //ManyToOne
 } from "typeorm";
 import { User } from "./User";
 
@@ -27,7 +25,7 @@ export class Book extends BaseEntity {
     year: number;
 
     @Column({ nullable: true })
-    coverUrl: string
+    coverUrl: string;
 
     @ManyToMany(() => User, (user) => user.owned)
     @JoinTable()

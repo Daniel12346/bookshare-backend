@@ -26,6 +26,7 @@ app.use(graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 20 }) as any);
 app.use(isAuth);
 
 const allSchemas = readSchemas(
+  "./src/schemas/book.gql",
   "./src/schemas/user.gql",
   "./src/schemas/chat.gql",
   "./src/schemas/mutation.gql",

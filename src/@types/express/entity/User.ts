@@ -11,6 +11,7 @@ import {
 import { hashPassword } from "../../../utils/passwordService";
 import { Message } from "./Message";
 import { Chat } from "./Chat";
+import { Book } from "./Book"
 
 @Entity()
 export class User extends BaseEntity {
@@ -37,6 +38,13 @@ export class User extends BaseEntity {
 
   @OneToMany(() => Message, (message) => message.from)
   messages: Message[];
+
+  @ManyToMany(() => Book, (book) => book.ownedBy)
+  owned: Book[];
+
+  @ManyToMany(() => Book, (book) => book.wantedBy)
+  wanted: Book[]
+
 
   @BeforeInsert()
   async hash() {

@@ -1,0 +1,8 @@
+type Book {
+  id: ID!
+  author: String!
+  year: Int
+  ownedBy: [User]!
+  wantedBy: [User]!
+  coverUrl: String!
+}

@@ -15,6 +15,7 @@ import http from "http";
 import { User } from "./src/@types/express/entity/User";
 import { Message } from "./src/@types/express/entity/Message";
 import { Chat } from "./src/@types/express/entity/Chat";
+
 dotenv.config();
 
 //setting up the middleware
@@ -64,7 +65,11 @@ const ormConfig: PostgresConnectionOptions[] = [
     entities: [User, Message, Chat],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
-    synchronize: true,
+    synchronize: false,
+    ssl: {
+      rejectUnauthorized: false
+    },
+
     //dropSchema: true,
     cli: {
       entitiesDir: "src/entity",
@@ -73,10 +78,10 @@ const ormConfig: PostgresConnectionOptions[] = [
     },
   },
   {
-    url: process.env.DATABASE_URL,
-    ssl: true,
+    url: "postgres://zsiyghdkcnigcd:15675a9a7837fd043455e2d220060498e079e3a9688d95130bdefe562c7a5152@ec2-52-19-164-214.eu-west-1.compute.amazonaws.com:5432/d86jnkd8kpm21e",
     type: "postgres",
-    synchronize: true,
+    synchronize: false,
+    port: 5432,
     //TODO: test
     entities: [User, Message, Chat],
     migrations: ["src/migration/**/*.ts"],
@@ -86,11 +91,14 @@ const ormConfig: PostgresConnectionOptions[] = [
       migrationsDir: "src/migration",
       subscribersDir: "src/subscriber",
     },
+    ssl: {
+      rejectUnauthorized: false
+    }
   },
 ];
 
 const startServer = async () => {
-  const port = process.env.PORT || 8080;
+  const port = process.env.PORT || 8000;
 
   const server = createServer();
   await createConnection(
@@ -109,7 +117,7 @@ const startServer = async () => {
 
   //setting cors to false so apollo server does not override the cors settings
   server.applyMiddleware({ app, cors: false });
-  console.log(`PORT: ${process.env.PORT}`);
+  console.log(`PORT: ${process.env.DATABASE_URL}`)
   server.installSubscriptionHandlers(httpServer);
   httpServer.listen(
     port /*() => {
@@ -121,4 +129,6 @@ const startServer = async () => {
   );
 };
 
+
 export default startServer;
+

@@ -4,8 +4,9 @@ type User {
   lastName: String!
   email: String!
   profileImageUrl: String
-  chats: [Chat]!
   messages: [Message]!
+  owned: [Book]!
+  wanted: [Book]!
 }
 
 scalar Date

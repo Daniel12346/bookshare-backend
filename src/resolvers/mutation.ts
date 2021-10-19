@@ -55,9 +55,12 @@ const createUser = async (_, input: UserInput): Promise<User> => {
     await userInputSchema.validate({
       input,
     });
-  } catch (e) {
+  } catch (e: any) {
     //TODO: yup error formatting
-    throw new UserInputError(e);
+    if (e) {
+      throw new UserInputError(e);
+
+    }
   }
 
   const usedEmail = await User.findOne({ where: { email: input.email } });
@@ -282,7 +285,7 @@ const removeUserFromChat = async (_, { userId, chatId }, { req }) => {
     if (!chat.users.find(user => user.id === req.userId)) {
       throw new ApolloError("You do not have access to this chat");
     }
-    chat.users = chat.users.filter(user => user.id != userId);
+    chat.users = chat.users.filter(user => user.id !== userId);
     await chat.save();
     return chat;
   } catch (e) {

@@ -12,11 +12,13 @@ const me = (_, __, { req }) => {
   if (!req.isAuth) {
     throw new AuthenticationError("Not authenticated");
   }
-  return User.findOne({ id: req.userId }, { relations: ["messages", "chats", "chats.messages", "chats.users"] });
+  return User.findOne({ id: req.userId }, { relations: ["messages", "chats", "chats.messages", "chats.users", "wanted", "owned"] });
 };
 //finds a single user by id
+
+//TODO: odvojit u dvi funkcije (jedna sa wanted i owned ?)
 const user = (_, { id }: { [key: string]: string }, { req }: Context) => {
-  return User.findOne({ id }, { relations: ["messages", "chats"] });
+  return User.findOne({ id }, { relations: ["messages", "chats", "wanted", "owned"] });
 };
 
 //finds all users

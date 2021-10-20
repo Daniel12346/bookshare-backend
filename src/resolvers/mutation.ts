@@ -83,11 +83,12 @@ const createUser = async (_, input: UserInput): Promise<User> => {
 };
 
 const deleteUser = async (_, { id }): Promise<MutationResult> => {
-  const user = await User.findOne({ where: { id } });
-  if (!user) {
-    throw new Error("User not found");
+  try {
+    const user = await User.findOne({ id })
+    await User.remove(user);
+  } catch (e) {
+    throw e
   }
-  User.delete(user);
   return {
     success: true,
   };

@@ -68,6 +68,8 @@ const queryResolvers = {
     messages,
     chats,
     chat,
+    book,
+    books
   },
 };
 

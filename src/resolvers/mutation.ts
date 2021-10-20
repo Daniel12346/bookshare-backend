@@ -76,6 +76,8 @@ const createUser = async (_, input: UserInput): Promise<User> => {
   user.lastName = input.lastName;
   user.messages = [];
   user.chats = [];
+  user.wanted = [];
+  user.owned = [];
   await user.save();
   return user;
 };
@@ -298,10 +300,10 @@ const removeUserFromChat = async (_, { userId, chatId }, { req }) => {
 // createBook(id: ID, author: String, year: Int, coverUrl: String): Book
 // deleteBook(id: ID): MutationResult
 
-const createBook = async (_, { id, author, year, coverUrl }) => {
+const createBook = async (_, { name, author, year, coverUrl }) => {
   try {
     const book = new Book();
-    book.id = id;
+    book.name = name;
     book.author = author;
     book.year = year;
     book.coverUrl = coverUrl;

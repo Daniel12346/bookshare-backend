@@ -25,7 +25,7 @@ type Mutation {
   addUserToChat(userId: ID, chatId: ID): Chat
   removeUserFromChat(userId: ID, chatId: ID): Chat
 
-  createBook(id: ID, author: String, year: Int, coverUrl: String): Book
+  createBook(name: String, author: String, year: Int, coverUrl: String): Book
   deleteBook(id: ID): MutationResult
   addBookToOwned(userId: ID, bookId: ID): MutationResult
   addBookToWanted(userId: ID, bookId: ID): MutationResult

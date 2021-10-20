@@ -1,6 +1,7 @@
 type Book {
   id: ID!
   author: String!
+  name: String!
   year: Int
   ownedBy: [User]!
   wantedBy: [User]!

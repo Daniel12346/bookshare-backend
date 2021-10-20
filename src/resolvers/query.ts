@@ -2,6 +2,7 @@ import { User } from "../@types/express/entity/User";
 import { Message } from "../@types/express/entity/Message";
 import { Chat } from "../@types/express/entity/Chat";
 import { AuthenticationError } from "apollo-server-core";
+import { Book } from "../@types/express/entity/Book";
 
 interface Context {
   req: Request;
@@ -21,6 +22,15 @@ const user = (_, { id }: { [key: string]: string }, { req }: Context) => {
 //finds all users
 const users = async () => {
   return User.find();
+};
+
+
+const books = async () => {
+  return Book.find({ relations: ["wantedBy, ownedBy"] });
+};
+
+const book = async (_, { id }) => {
+  return Book.findOne({ id }, { relations: ["wantedBy, ownedBy"] });
 };
 
 const messages = async () => {

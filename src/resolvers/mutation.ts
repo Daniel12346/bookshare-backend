@@ -9,6 +9,7 @@ import { Message } from "../@types/express/entity/Message";
 import pubsub, { MESSAGE_CREATED } from "../pubsub";
 import { Chat } from "../@types/express/entity/Chat";
 import { ReadStream } from "typeorm/platform/PlatformTools";
+import { Book } from "../@types/express/entity/Book";
 
 //TODO: error handling, move input validation to frontend, generate types
 
@@ -293,6 +294,71 @@ const removeUserFromChat = async (_, { userId, chatId }, { req }) => {
   }
 }
 
+
+// createBook(id: ID, author: String, year: Int, coverUrl: String): Book
+// deleteBook(id: ID): MutationResult
+
+const createBook = async (_, { id, author, year, coverUrl }) => {
+  try {
+    const book = new Book();
+    book.id = id;
+    book.author = author;
+    book.year = year;
+    book.coverUrl = coverUrl;
+    const createdBook = await book.save();
+    return createdBook;
+  } catch (e) {
+    throw e;
+  }
+}
+
+const deleteBook = async (_, { id }) => {
+  try {
+    await Book.delete({ id });
+    return { success: true }
+  } catch (e) {
+    throw e;
+  }
+}
+
+const addBookToWanted = async (_, { userId, bookId }, { req }) => {
+  try {
+    const book = await Book.findOne({ id: bookId });
+    const user = await User.findOne({ id: userId }, { relations: ["wanted"] });
+    if (!user) {
+      throw new ApolloError("User not found");
+    }
+    if (!book) {
+      throw new ApolloError("Book not found");
+    }
+
+    user.wanted.push(book)
+    await user.save();
+    return { success: true };
+  } catch (e) {
+    throw e;
+  }
+}
+
+const addBookToOwned = async (_, { userId, bookId }, { req }) => {
+  try {
+    const book = await Book.findOne({ id: bookId });
+    const user = await User.findOne({ id: userId }, { relations: ["owned"] });
+    if (!user) {
+      throw new ApolloError("User not found");
+    }
+    if (!book) {
+      throw new ApolloError("Book not found");
+    }
+
+    user.owned.push(book)
+    await user.save();
+    return { success: true };
+  } catch (e) {
+    throw e;
+  }
+}
+
 const mutationResolvers = {
   Mutation: {
     createUser,
@@ -305,7 +371,11 @@ const mutationResolvers = {
     deleteChat,
     uploadImage,
     uploadChatImage,
-    removeUserFromChat
+    removeUserFromChat,
+    createBook,
+    deleteBook,
+    addBookToOwned,
+    addBookToWanted
   },
 };
 

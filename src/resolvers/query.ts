@@ -28,11 +28,11 @@ const users = async () => {
 
 
 const books = async () => {
-  return Book.find({ relations: ["wantedBy, ownedBy"] });
+  return Book.find({ relations: ["wantedBy", "ownedBy"] });
 };
 
 const book = async (_, { id }) => {
-  return Book.findOne({ id }, { relations: ["wantedBy, ownedBy"] });
+  return Book.findOne({ id }, { relations: ["wantedBy", "ownedBy"] });
 };
 
 const messages = async () => {

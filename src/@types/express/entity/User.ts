@@ -33,7 +33,7 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   profileImageUrl: string;
 
-  @ManyToMany((type) => Chat, (chat) => chat.users)
+  @ManyToMany(() => Chat, (chat) => chat.users)
   chats: Chat[];
 
   @OneToMany(() => Message, (message) => message.from)

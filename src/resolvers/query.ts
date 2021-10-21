@@ -12,7 +12,7 @@ const me = (_, __, { req }) => {
   if (!req.isAuth) {
     throw new AuthenticationError("Not authenticated");
   }
-  return User.findOne({ id: req.userId }, { relations: ["messages", "chats", "chats.messages", "chats.users", "wanted", "owned"] });
+  return User.findOne({ id: (req.userId) as string }, { relations: ["messages", "chats", "chats.messages", "chats.users", "wanted", "owned"] });
 };
 //finds a single user by id
 

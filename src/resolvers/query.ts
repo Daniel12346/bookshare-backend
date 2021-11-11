@@ -3,16 +3,20 @@ import { Message } from "../@types/express/entity/Message";
 import { Chat } from "../@types/express/entity/Chat";
 import { AuthenticationError } from "apollo-server-core";
 import { Book } from "../@types/express/entity/Book";
+import { Request } from "express"
+
 
 interface Context {
   req: Request;
 }
 
-const me = (_, __, { req }) => {
+
+//TODO: fix
+const me = (_, __, { req }: any) => {
   if (!req.isAuth) {
     throw new AuthenticationError("Not authenticated");
   }
-  return User.findOne({ id: (req.userId) as string }, { relations: ["messages", "chats", "chats.messages", "chats.users", "wanted", "owned"] });
+  return User.findOne({ id: req.userId }, { relations: ["messages", "chats", "chats.messages", "chats.users", "wanted", "owned"] as any });
 };
 //finds a single user by id
 
@@ -54,7 +58,7 @@ const chats = async () => {
 
 const chat = async (_, { id }) => {
   try {
-    return await Chat.findOne({ id }, { relations: ["users", "messages", "messages.from", "messages.chat"] });
+    return await Chat.findOne({ id }, { relations: ["users", "messages", "messages.from", "messages.chat"] as any });
   } catch (e) {
     throw new Error(e);
   }

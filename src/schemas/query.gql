@@ -4,7 +4,4 @@ type Query {
   book(id: String): Book
   user(id: String): User
   me: User
-  # messages: [Message]!
-  # chats: [Chat]!
-  # chat(id: String): Chat
 }

@@ -12,7 +12,6 @@ import dotenv from "dotenv";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import http from "http";
 import { User } from "./src/@types/express/entity/User";
-import { Chat } from "./src/@types/express/entity/Chat";
 import { Book } from "./src/@types/express/entity/Book";
 
 dotenv.config();
@@ -26,18 +25,15 @@ app.use(isAuth);
 const allSchemas = readSchemas(
   "./src/schemas/book.gql",
   "./src/schemas/user.gql",
-  // "./src/schemas/chat.gql",
   "./src/schemas/mutation.gql",
   "./src/schemas/query.gql",
-  // "./src/schemas/message.gql",
-  // "./src/schemas/subscription.gql"
+
 );
 const typeDefs = gql(allSchemas.join());
 const resolvers = {
   Upload: GraphQLUpload,
   ...mutationResolvers,
   ...queryResolvers,
-  // ...subscriptionResolvers
 };
 const createServer = () => {
   return new ApolloServer({

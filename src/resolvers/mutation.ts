@@ -5,9 +5,7 @@ import { isDev } from "../utils";
 import { ApolloError, UserInputError } from "apollo-server-core";
 import jwt from "jsonwebtoken";
 import cloudinary from "cloudinary"
-// import { Message } from "../@types/express/entity/Message";
-// import pubsub, { MESSAGE_CREATED } from "../pubsub";
-// import { Chat } from "../@types/express/entity/Chat";
+
 import { ReadStream } from "typeorm/platform/PlatformTools";
 import { Book } from "../@types/express/entity/Book";
 
@@ -21,18 +19,6 @@ const userInputSchema = yup.object().shape({
   password: yup.string().min(8),
 });
 
-/*
-interface UserInput {
-  email: string;
-  password: string;
-}
-
-interface MessageInput {
-  receiverId: string;
-  content: string;
-}*/
-
-//TODO: interface inputArg,...
 
 //this is a placeholder return used because graphql does not allow returning void
 interface MutationResult {
@@ -74,8 +60,7 @@ const createUser = async (_, input: UserInput): Promise<User> => {
   user.password = input.password;
   user.firstName = input.firstName;
   user.lastName = input.lastName;
-  // user.messages = [];
-  // user.chats = [];
+
   user.wanted = [];
   user.owned = [];
   await user.save();
@@ -94,78 +79,6 @@ const deleteUser = async (_, { id }): Promise<MutationResult> => {
   };
 };
 
-// const createChat = async (_, { userId }, { req }): Promise<Chat> => {
-//   try {
-//     //the receiver
-//     const user = await User.findOne({ id: userId }, { relations: ["chats"] });
-//     //the sender (the user that's logged in) TODO: req.userId
-//     const me = await User.findOne({ id: req.userId }, { relations: ["chats"] })
-//     if (!me || !user) {
-//       throw new ApolloError("user not found");
-//     }
-//     const chat = new Chat();
-//     chat.name = null;
-//     //only group chats should have chat names
-//     chat.users = [user, me];
-//     chat.messages = [];
-//     const createdChat = await chat.save();
-//     me.chats.push(createdChat);
-//     user.chats.push(createdChat);
-//     return createdChat;
-//   } catch (e) {
-//     throw e;
-//   }
-// };
-
-// const createMessage = async (
-//   _,
-//   { chatId, content }, { req }
-// ): Promise<Message> => {
-//   //TODO: front end validation
-//   try {
-//     const chat = await Chat.findOne({ id: chatId }, { relations: ["messages"] });
-//     const from = (await User.findOne({ where: { id: req.userId } }));
-
-//     //    const from = await User.findOne({ id: req.userId });
-//     if (!chat) {
-//       throw new Error("chat not found");
-//     }
-//     if (!from) {
-//       //TODO: maknut
-//       throw new Error("message sender (from) not found");
-//     }
-//     const message = new Message();
-//     message.content = content;
-//     message.chat = chat;
-//     message.from = from;
-//     const createdMessage = await message.save();
-//     chat.messages.push(createdMessage);
-//     //publishing the message for the messageCreated subscription
-//     await pubsub.publish(MESSAGE_CREATED, { messageCreated: createdMessage });
-//     return createdMessage;
-//   } catch (e) {
-//     console.log("createMesage error", e);
-//   }
-// };
-
-
-// const deleteUser = async (_, { id }): Promise<MutationResult> => {
-//   const user = await User.findOne({ where: { id } });
-//   if (!user) {
-//     throw new Error("User not found");
-//   }
-//   User.delete(user);
-//   return {
-//     success: true,
-//   };
-// };
-
-// const deleteMessage = async (_, { id }): Promise<MutationResult> => {
-//   await Message.delete({ id });
-//   return {
-//     success: true,
-//   };
-// };
 
 
 const logIn = async (_, { email, password }, { req }: Context) => {
@@ -195,22 +108,6 @@ const logIn = async (_, { email, password }, { req }: Context) => {
   return token;
 };
 
-// const deleteChat = async (_, { id }, { req }) => {
-//   try {
-//     const chat = await Chat.findOne({ id }, { relations: ["users", "messages"] });
-//     if (!chat) {
-//       throw new ApolloError("Chat not found");
-//     }
-//     if (!chat.users.find(user => user.id === req.userId)) {
-//       throw new ApolloError("You do not have access to this chat");
-//     }
-//     await Message.remove(chat.messages);
-//     await Chat.remove(chat);
-//   } catch (e) {
-//     throw e;
-//   }
-//   return { success: true };
-// }
 
 
 const uploadFile = async (file) => {
@@ -236,70 +133,6 @@ const uploadImage = async (_, { file }, { req }) => {
     throw e;
   }
 }
-
-// const uploadChatImage = async (_, { file, chatId }, { req }) => {
-//   try {
-//     const chat = await Chat.findOne({ id: chatId });
-//     if (!chat) {
-//       throw new ApolloError("Chat not found");
-//     }
-//     if (!chat.users.find(user => user.id === req.userId)) {
-//       throw new ApolloError("You do not have access to this chat");
-//     }
-//     const uploaded = await uploadFile(file);
-//     chat.imageUrl = uploaded.secure_url;
-//     await chat.save();
-//     return { success: true }
-//   } catch (e) {
-//     throw e;
-//   }
-// }
-
-// const addUserToChat = async (_, { userId, chatId }, { req }) => {
-//   try {
-//     const chat = await Chat.findOne({ id: chatId }, { relations: ["users"] });
-//     const user = await User.findOne({ id: userId });
-//     if (!user) {
-//       throw new ApolloError("User not found");
-//     }
-//     if (!chat) {
-//       throw new ApolloError("Chat not found");
-//     }
-//     if (!chat.users.find(user => user.id === req.userId)) {
-//       throw new ApolloError("You do not have access to this chat");
-//     }
-//     chat.users.push(user);
-//     await chat.save();
-//     return chat;
-//   } catch (e) {
-//     throw e;
-//   }
-// }
-
-// const removeUserFromChat = async (_, { userId, chatId }, { req }) => {
-//   try {
-//     const chat = await Chat.findOne({ id: chatId }, { relations: ["users"] });
-//     const user = await User.findOne({ id: userId });
-//     if (!user) {
-//       throw new ApolloError("User not found");
-//     }
-//     if (!chat) {
-//       throw new ApolloError("Chat not found");
-//     }
-//     if (!chat.users.find(user => user.id === req.userId)) {
-//       throw new ApolloError("You do not have access to this chat");
-//     }
-//     chat.users = chat.users.filter(user => user.id !== userId);
-//     await chat.save();
-//     return chat;
-//   } catch (e) {
-//     throw e;
-//   }
-// }
-
-
-// createBook(id: ID, author: String, year: Int, coverUrl: String): Book
-// deleteBook(id: ID): MutationResult
 
 const createBook = async (_, { name, author, year, coverUrl }) => {
   try {
@@ -366,15 +199,8 @@ const mutationResolvers = {
   Mutation: {
     createUser,
     deleteUser,
-    // addUserToChat,
     logIn,
-    // createMessage,
-    // deleteMessage,
-    // createChat,
-    // deleteChat,
     uploadImage,
-    // uploadChatImage,
-    // removeUserFromChat,
     createBook,
     deleteBook,
     addBookToOwned,

@@ -4,7 +4,6 @@ type User {
   lastName: String!
   email: String!
   profileImageUrl: String
-  # messages: [Message]!
   owned: [Book]!
   wanted: [Book]!
 }

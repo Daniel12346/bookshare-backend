@@ -36,7 +36,6 @@ interface UserInput {
   lastName: string;
 }
 
-//TODO: refactor errors
 const createUser = async (_, input: UserInput): Promise<User> => {
   try {
     await userInputSchema.validate({
@@ -63,7 +62,38 @@ const createUser = async (_, input: UserInput): Promise<User> => {
 
   user.wanted = [];
   user.owned = [];
-  await user.save();
+  //TODO:
+  user.profileImageUrl = "";
+  try {
+    await user.save();
+  } catch (e) {
+    throw e;
+  }
+  return user;
+};
+
+const createUserTest = async (_, { email, firstName, lastName, password }: UserInput): Promise<User> => {
+
+  const usedEmail = await User.findOne({ where: { email } });
+  if (usedEmail) {
+    throw new Error("Email already in use");
+  }
+
+  const user = new User();
+  user.email = email;
+  user.password = password;
+  user.firstName = firstName;
+  user.lastName = lastName;
+
+  user.wanted = [];
+  user.owned = [];
+  //TODO:
+  user.profileImageUrl = "";
+  try {
+    await user.save();
+  } catch (e) {
+    throw e;
+  }
   return user;
 };
 

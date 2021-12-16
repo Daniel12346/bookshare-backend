@@ -9,8 +9,8 @@ import {
 } from "typeorm";
 
 import { hashPassword } from "../../../utils/passwordService";
-import { Message } from "./Message";
-import { Chat } from "./Chat";
+// import { Message } from "./Message";
+// import { Chat } from "./Chat";
 import { Book } from "./Book"
 
 @Entity()
@@ -33,11 +33,11 @@ export class User extends BaseEntity {
   @Column({ nullable: true })
   profileImageUrl: string;
 
-  @ManyToMany(() => Chat, (chat) => chat.users)
-  chats: Chat[];
+  // @ManyToMany(() => Chat, (chat) => chat.users)
+  // chats: Chat[];
 
-  @OneToMany(() => Message, (message) => message.from)
-  messages: Message[];
+  // @OneToMany(() => Message, (message) => message.from)
+  // messages: Message[];
 
   @ManyToMany(() => Book, (book) => book.ownedBy)
   owned: Book[];

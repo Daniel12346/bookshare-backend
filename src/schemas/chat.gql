@@ -1,7 +1,0 @@
-type Chat {
-  id: ID!
-  name: String
-  users: [User]!
-  messages: [Message]!
-  createdAt: Date!
-}

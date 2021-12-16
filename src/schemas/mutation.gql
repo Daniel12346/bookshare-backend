@@ -22,8 +22,8 @@ type Mutation {
     password: String
   ): User!
   deleteUser(id: ID): MutationResult
-  addUserToChat(userId: ID, chatId: ID): Chat
-  removeUserFromChat(userId: ID, chatId: ID): Chat
+  # addUserToChat(userId: ID, chatId: ID): Chat
+  # removeUserFromChat(userId: ID, chatId: ID): Chat
 
   createBook(name: String, author: String, year: Int, coverUrl: String): Book
   deleteBook(id: ID): MutationResult
@@ -32,10 +32,10 @@ type Mutation {
 
   #the string that is returned is a jwt
   logIn(email: String, password: String): String
-  createMessage(chatId: ID, content: String): Message
-  createChat(userId: ID): Chat
-  deleteMessage(id: ID): MutationResult
-  deleteChat(id: ID): MutationResult
+  # createMessage(chatId: ID, content: String): Message
+  # createChat(userId: ID): Chat
+  # deleteMessage(id: ID): MutationResult
+  # deleteChat(id: ID): MutationResult
   uploadImage(file: Upload): MutationResult
-  uploadChatImage(chatId: ID, file: Upload): MutationResult
+  # uploadChatImage(chatId: ID, file: Upload): MutationResult
 }

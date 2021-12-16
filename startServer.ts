@@ -5,7 +5,6 @@ import { createConnection } from "typeorm";
 import { ApolloServer, gql } from "apollo-server-express";
 import mutationResolvers from "./src/resolvers/mutation";
 import queryResolvers from "./src/resolvers/query";
-import subscriptionResolvers from "./src/resolvers/subscription";
 import isAuth from "./src/middleware/auth";
 import express, { Request } from "express";
 import cors from "cors";
@@ -13,7 +12,6 @@ import dotenv from "dotenv";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 import http from "http";
 import { User } from "./src/@types/express/entity/User";
-import { Message } from "./src/@types/express/entity/Message";
 import { Chat } from "./src/@types/express/entity/Chat";
 import { Book } from "./src/@types/express/entity/Book";
 
@@ -28,18 +26,18 @@ app.use(isAuth);
 const allSchemas = readSchemas(
   "./src/schemas/book.gql",
   "./src/schemas/user.gql",
-  "./src/schemas/chat.gql",
+  // "./src/schemas/chat.gql",
   "./src/schemas/mutation.gql",
   "./src/schemas/query.gql",
-  "./src/schemas/message.gql",
-  "./src/schemas/subscription.gql"
+  // "./src/schemas/message.gql",
+  // "./src/schemas/subscription.gql"
 );
 const typeDefs = gql(allSchemas.join());
 const resolvers = {
   Upload: GraphQLUpload,
   ...mutationResolvers,
   ...queryResolvers,
-  ...subscriptionResolvers
+  // ...subscriptionResolvers
 };
 const createServer = () => {
   return new ApolloServer({
@@ -64,7 +62,7 @@ const ormConfig: PostgresConnectionOptions[] = [
     password: "test",
     database: "test",
     logging: false,
-    entities: [User, Message, Chat, Book],
+    entities: [User, Book],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     synchronize: false,
@@ -85,7 +83,7 @@ const ormConfig: PostgresConnectionOptions[] = [
     synchronize: true,
     port: 5432,
     //TODO: test
-    entities: [User, Message, Chat, Book],
+    entities: [User, Book],
     migrations: ["src/migration/**/*.ts"],
     subscribers: ["src/subscriber/**/*.ts"],
     cli: {
@@ -120,7 +118,7 @@ const startServer = async () => {
   //setting cors to false so apollo server does not override the cors settings
   server.applyMiddleware({ app, cors: false });
   console.log(`PORT: ${process.env.DATABASE_URL}`)
-  server.installSubscriptionHandlers(httpServer);
+  //server.installSubscriptionHandlers(httpServer);
   httpServer.listen(
     port /*() => {
     console.log(`Listening to port: ${port}${server.graphqlPath}`);

@@ -13,7 +13,6 @@ import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConne
 import http from "http";
 import { User } from "./src/@types/express/entity/User";
 import { Book } from "./src/@types/express/entity/Book";
-import { transporter } from "./src/nodemailerTransporter";
 
 dotenv.config();
 
@@ -116,19 +115,7 @@ const startServer = async () => {
   server.applyMiddleware({ app, cors: false });
   console.log(`PORT: ${process.env.DATABASE_URL}`)
 
-  const mailOptions = {
-    from: '"Example Team" <from@example.com>',
-    to: 'danezoki@gmail.com',
-    subject: 'App Started Test Mail',
-    text: 'Hey there, it’s our first message sent with Nodemailer ;) ',
-    html: '<b>Hey there! </b><br> This is our first message sent with Nodemailer'
-  };
-  try {
-    await transporter.sendMail(mailOptions);
-    console.log("mail sent");
-  } catch (e) {
-    console.log(e);
-  }
+
   //server.installSubscriptionHandlers(httpServer);
   httpServer.listen(
     port /*() => {

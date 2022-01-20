@@ -8,6 +8,7 @@ import cloudinary from "cloudinary"
 
 import { ReadStream } from "typeorm/platform/PlatformTools";
 import { Book } from "../@types/express/entity/Book";
+import { transporter } from "../nodemailerTransporter";
 
 //TODO: error handling, move input validation to frontend, generate types
 
@@ -219,6 +220,19 @@ const addBookToOwned = async (_, { userId, bookId }, { req }) => {
 
     user.owned.push(book)
     await user.save();
+    const mailOptions = {
+      from: 'Bookshare',
+      to: 'danezoki@gmail.com',
+      subject: 'A book you wishlisted was added',
+      text: `${user.firstName} ${user.lastName} added ${book.name}. You can message them at ${user.email} `,
+      html: '<b>Hey there! </b>'
+    };
+    try {
+      await transporter.sendMail(mailOptions);
+      console.log("mail sent");
+    } catch (e) {
+      console.log(e);
+    }
     return { success: true };
   } catch (e) {
     throw e;

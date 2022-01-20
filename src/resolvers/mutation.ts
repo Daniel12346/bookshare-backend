@@ -220,12 +220,15 @@ const addBookToOwned = async (_, { userId, bookId }, { req }) => {
 
     user.owned.push(book)
     await user.save();
+    //NE OVAKO (postgres query!)
+    const users = await User.find();
+    const to = users && users.filter(user => user.wanted.map(wantedBook => wantedBook.id).includes(book.id)).map(u => u.email)
     const mailOptions = {
       from: 'Bookshare',
-      to: 'danezoki@gmail.com',
+      to,
       subject: 'A book you wishlisted was added',
       text: `${user.firstName} ${user.lastName} added ${book.name}. You can message them at ${user.email} `,
-      html: '<b>Hey there! </b>'
+      html: `<b>Hey there! </b>' <br/> ${user.firstName} ${user.lastName} added ${book.name}. You can message them at ${user.email} `,
     };
     try {
       await transporter.sendMail(mailOptions);

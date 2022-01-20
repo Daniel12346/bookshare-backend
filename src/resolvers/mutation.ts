@@ -221,9 +221,8 @@ const addBookToOwned = async (_, { userId, bookId }, { req }) => {
     user.owned.push(book)
     await user.save();
     //NE OVAKO (postgres query!)
-    const users = await User.find();
-    const to = users.map(user => user.email);
-    //users && users.filter(user => user.wanted.map(wantedBook => wantedBook.id).includes(book.id)).map(u => u.email)
+    const users = await User.find({ relations: ["wanted"] });
+    const to = users && users.filter(user => user.wanted.map(wantedBook => wantedBook.id).includes(book.id)).map(u => u.email)
     const mailOptions = {
       from: 'Bookshare <bookshare@test.com>',
       to,

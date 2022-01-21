@@ -110,6 +110,18 @@ const deleteUser = async (_, { id }): Promise<MutationResult> => {
   };
 };
 
+const updateUserData = async (_, { id, field, value }: { id: any, field: "firstName" | "lastName" | "email", value }): Promise<MutationResult> => {
+  try {
+    const user = await User.findOne({ id })
+    user[field] = value;
+    user.save();
+  } catch (e) {
+    throw e
+  }
+  return {
+    success: true,
+  };
+};
 
 
 const logIn = async (_, { email, password }, { req }: Context) => {
@@ -207,6 +219,8 @@ const addBookToWanted = async (_, { userId, bookId }, { req }) => {
   }
 }
 
+
+
 const addBookToOwned = async (_, { userId, bookId }, { req }) => {
   try {
     const book = await Book.findOne({ id: bookId });
@@ -251,7 +265,8 @@ const mutationResolvers = {
     createBook,
     deleteBook,
     addBookToOwned,
-    addBookToWanted
+    addBookToWanted,
+    updateUserData
   },
 };
 

@@ -31,4 +31,5 @@ type Mutation {
   #the string that is returned is a jwt
   logIn(email: String, password: String): String
   uploadImage(file: Upload): MutationResult
+  updateUserData(id: ID, field: String, value: String): MutationResult
 }
